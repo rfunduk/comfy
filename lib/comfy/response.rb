@@ -1,9 +1,21 @@
 module Comfy
 
   class Response
+    include Comfy
 
-    def initialize( result )
-      @result = JSON.parse( result )
+    def initialize( result, db=nil )
+      @db = db
+      @result = {}
+      JSON.parse( result ).entries.each do |key, value|
+        key = '_' + key if respond_to? key
+        @result[key] = value
+      end
+      @result
+    end
+
+    def method_missing( method, *args, &block )
+      method = method.to_s
+      @result[method] if @result.has_key?( method )
     end
 
     def ensure( *args )
@@ -22,7 +34,7 @@ module Comfy
     end
 
     def to_doc
-      Document.new( @result )
+      Document.new( @db, @result )
     end
 
   end

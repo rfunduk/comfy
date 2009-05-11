@@ -4,14 +4,16 @@ $:.unshift( File.dirname( File.expand_path( __FILE__ ) ) + '/../lib/' )
 require 'comfy'
 
 class TestDatabase < Test::Unit::TestCase
+  include Comfy
 
   def setup
-    Comfy::Database.destroy!( 'idontexist' )
-    @db = Comfy::Database.new( 'comfytest' )
+    Database.destroy!( 'idontexist' )
+    Database.destroy!( 'comfytest' )
+    @db = Database.new( 'comfytest' )
   end
 
   def test_no_such_db
-    Comfy::Database.new( 'idontexist' )
+    Database.new( 'idontexist' )
   end
 
   def test_db_info
@@ -20,6 +22,10 @@ class TestDatabase < Test::Unit::TestCase
       doc_count = info.doc_count
       disk_size = info.disk_size
     end
+  end
+  
+  def test_all_docs
+    assert_equal 0, @db.all.length
   end
 
 end

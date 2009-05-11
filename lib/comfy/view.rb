@@ -1,5 +1,6 @@
 module Comfy
   class View
+    include Comfy
 
     
 
