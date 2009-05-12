@@ -12,10 +12,15 @@ module Comfy
       end
       @result
     end
-
+    
     def method_missing( method, *args, &block )
       method = method.to_s
-      @result[method] if @result.has_key?( method )
+      if method =~ /=$/
+        method.sub!(/=$/, '')
+        @result[method] = *args if @result.has_key?( method )
+      else
+        @result[method] if @result.has_key?( method )
+      end
     end
 
     def ensure( *args )

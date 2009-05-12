@@ -15,9 +15,9 @@ module Comfy
       method = method.to_s
       if method =~ /=$/
         method.sub!(/=$/, '')
-        @__hash[method] = *args
+        @__hash[method] = *args if has?( method )
       else
-        @__hash[method] if @__hash.has_key?( method )
+        @__hash[method] if has?( method )
       end
     end
 
@@ -36,8 +36,9 @@ module Comfy
     def save
       raise Comfy::UnsaveableDocumentException if @db.nil?
       
-      if @__hash.has_key?( '_id' )
-        result = RCW.put( "#{@db.uri}/#{@__hash['_id']}", @__hash.to_json,
+      if has?( '_id' )
+        rev = "?rev=#{_rev}" if has?( '_rev' )
+        result = RCW.put( "#{@db.uri}/#{_id}#{rev if rev}", @__hash.to_json,
                           :content_type => 'application/json' )
       else
         result = RCW.post( @db.uri, @__hash.to_json,
@@ -46,7 +47,27 @@ module Comfy
       
       response = Response.new( result )
       @__hash['_id'] = response._id
+      @__hash['_rev'] = response.rev
       return response
+    end
+
+    def delete
+      raise Comfy::UnsaveableDocumentException if @db.nil?
+
+      begin
+        result = RCW.delete( "#{@db.uri}/#{_id}?rev=#{_rev}" )
+      rescue
+        return false
+      end
+
+      return Response.new( result )
+    end
+
+    protected
+
+    def has?( key )
+      key = key.to_s if key.is_a? Symbol
+      return @__hash.has_key?( key )
     end
     
   end

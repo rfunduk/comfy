@@ -1,8 +1,11 @@
 module Comfy
 
-  class FourOhFour < StandardError;end
-  class FiveHundred < StandardError;end
+  class ComfyException < StandardError;end
+
+  class FourOhFour < ComfyException;end
+  class FiveHundred < ComfyException;end
   
-  class ResponseSanityFail < StandardError;end
+  class ResponseSanityFail < ComfyException;end
+  class InvalidView < ComfyException;end
 
 end

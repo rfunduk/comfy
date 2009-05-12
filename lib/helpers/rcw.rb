@@ -11,11 +11,12 @@ class RCW
     end
 
     begin
+      #puts 'sending restclient : ' + method.to_s + " : " + args.join(',')
       RestClient.send( method, *args )
     rescue RestClient::Exception => e
       { :error => e.class,
         :message => e.message,
-        :backtrace => e.backtrace }.to_json
+        :backtrace => '' }.to_json
     end
   end
 

@@ -46,4 +46,13 @@ class TestDocument < Test::Unit::TestCase
     assert_equal 1, @db.info.doc_count
   end
 
+  def test_doc_delete
+    doc = Document.new( @db, @fake_doc )
+    doc.save
+
+    assert_equal 1, @db.info.doc_count
+    assert doc.delete.is_a?( Response )
+    assert_equal 0, @db.info.doc_count
+  end
+
 end
