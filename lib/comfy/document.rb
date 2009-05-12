@@ -7,7 +7,12 @@ module Comfy
     
     def initialize( db, hash={} )
       hash = JSON.parse( hash ) if hash.is_a? String
-      @__hash = hash
+      @__hash = {}
+      hash.entries.each do |key, value|
+        key = key.to_s if key.is_a? Symbol
+        key = '_' + key if Object.respond_to? key
+        @__hash[key] = value
+      end
       @db = db
     end
     
