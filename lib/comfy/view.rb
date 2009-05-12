@@ -36,7 +36,7 @@ module Comfy
 
       if response.rows
         docs = response.rows.collect do |row|
-          Document.new( db, row['doc'] ? row['doc'] : row )
+          Document.new( db, row['doc'] || row )
         end
         response.rows = docs
       end
@@ -46,4 +46,3 @@ module Comfy
 
   end
 end
-
