@@ -2,10 +2,11 @@ module Comfy
   class View
     include Comfy
 
-    def self.create( db, design, view, func={} )
+    def self.create( db, path, func={} )
       raise Comfy::InvalidView unless func.is_a?( Hash )
 
       @db = db
+      design, view = path.split( '/' )
       existing = @db.get( '_design/' + design ).to_doc
       if existing.error
         existing = Document.new( @db,
@@ -23,7 +24,8 @@ module Comfy
       return existing
     end
 
-    def self.run( db, design, view, parameters={} )
+    def self.run( db, path, parameters={} )
+      design, view = path.split( '/' )
       params = '?' + parameters.entries.collect do |key, value|
         "#{key}=#{value}"
       end.join( '&' ) if parameters.any?

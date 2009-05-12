@@ -14,12 +14,12 @@ class TestDocument < Test::Unit::TestCase
   end
 
   def test_view_create
-    design_doc = View.create( @db, 'something', 'all', @fake_view )
+    design_doc = View.create( @db, 'something/all', @fake_view )
     assert_equal @fake_view[:map], design_doc.views['all']['map']
   end
 
   def test_view_update
-    design_doc = View.create( @db, 'something', 'all', @fake_view )
+    design_doc = View.create( @db, 'something/all', @fake_view )
 
     new_map = "function( doc ) { emit( null, doc._id ); }"
     design_doc.views['all']['map'] = new_map
@@ -31,29 +31,29 @@ class TestDocument < Test::Unit::TestCase
   end
 
   def test_map_view_run_with_include_docs
-    View.create( @db, 'something', 'all', @fake_view )
-    results = View.run( @db, 'something', 'all', { :include_docs => true } )
+    View.create( @db, 'something/all', @fake_view )
+    results = View.run( @db, 'something/all', { :include_docs => true } )
     assert_equal 0, results.total_rows
 
     # create a doc which will be returned
     doc = Document.new( @db, { :time_for => 'some thrilling heroics' } )
     doc.save
 
-    results = View.run( @db, 'something', 'all', { :include_docs => true } )
+    results = View.run( @db, 'something/all', { :include_docs => true } )
     assert_equal 1, results.total_rows
     assert_equal doc, results.rows.first
   end
 
   def test_map_view_run
-    View.create( @db, 'something', 'all', @fake_view )
-    results = View.run( @db, 'something', 'all', { :include_docs => true } )
+    View.create( @db, 'something/all', @fake_view )
+    results = View.run( @db, 'something/all', { :include_docs => true } )
     assert_equal 0, results.total_rows
 
     # create a doc which will be returned
     doc = Document.new( @db, { :time_for => 'some thrilling heroics' } )
     doc.save
 
-    results = View.run( @db, 'something', 'all' )
+    results = View.run( @db, 'something/all' )
     assert_equal 1, results.total_rows
     assert_equal doc._id, results.rows.first._id
   end
@@ -78,10 +78,10 @@ class TestDocument < Test::Unit::TestCase
     # now create the view
     view = { :map => "function( doc ) { emit( doc.letter, 1 ); }",
              :reduce => "function( keys, values ) { return sum( values ); }" }
-    View.create( @db, 'something', 'total', view )
+    View.create( @db, 'something/total', view )
 
     # run it
-    results = View.run( @db, 'something', 'total', { :reduce => true } )
+    results = View.run( @db, 'something/total', { :reduce => true } )
     assert_equal total, results.rows.first.value
   end
 
@@ -106,10 +106,10 @@ class TestDocument < Test::Unit::TestCase
     # create the view
     view = { :map => "function( doc ) { emit( doc.letter, doc.count ); }",
              :reduce => "function( keys, values ) { return sum( values ); }" }
-    View.create( @db, 'something', 'grouped', view )
+    View.create( @db, 'something/grouped', view )
 
     # run it
-    results = View.run( @db, 'something', 'grouped', { :group => true } )
+    results = View.run( @db, 'something/grouped', { :group => true } )
     results.rows.each do |doc|
       assert_equal totals[doc.key], doc.value
     end
