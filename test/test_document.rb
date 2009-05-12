@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'test/unit'
 require 'redgreen'
 $:.unshift( File.dirname( File.expand_path( __FILE__ ) ) + '/../lib/' )
@@ -33,6 +34,25 @@ class TestDocument < Test::Unit::TestCase
     Document.new( @db, @fake_doc ).save
     assert_equal 1, @db.all.length
     assert_equal 1, @db.info.doc_count
+  end
+
+  def test_doc_update
+    doc = Document.new( @db, @fake_doc )
+    assert !doc._id
+    doc.save
+    assert doc._id
+    rev = doc._rev
+
+    doc.a = 5
+    doc.b += 1
+    doc.save
+
+    assert_equal 5, doc.a
+    assert_not_equal doc.b, @fake_doc[:b]
+
+    raw_doc = @db.get( doc._id ).to_doc
+    assert_equal doc, raw_doc
+    assert_not_equal rev, raw_doc._rev 
   end
   
   def test_doc_get

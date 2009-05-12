@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'test/unit'
 require 'redgreen'
 $:.unshift( File.dirname( File.expand_path( __FILE__ ) ) + '/../lib/' )
