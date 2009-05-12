@@ -30,7 +30,7 @@ class TestDocument < Test::Unit::TestCase
     assert_equal new_map, raw_doc.views['all']['map']
   end
 
-  def test_view_run
+  def test_map_view_run_with_include_docs
     View.create( @db, 'something', 'all', @fake_view )
     results = View.run( @db, 'something', 'all', { :include_docs => true } )
     assert_equal 0, results.total_rows
@@ -41,7 +41,77 @@ class TestDocument < Test::Unit::TestCase
 
     results = View.run( @db, 'something', 'all', { :include_docs => true } )
     assert_equal 1, results.total_rows
-
     assert_equal doc, results.rows.first
+  end
+
+  def test_map_view_run
+    View.create( @db, 'something', 'all', @fake_view )
+    results = View.run( @db, 'something', 'all', { :include_docs => true } )
+    assert_equal 0, results.total_rows
+
+    # create a doc which will be returned
+    doc = Document.new( @db, { :time_for => 'some thrilling heroics' } )
+    doc.save
+
+    results = View.run( @db, 'something', 'all' )
+    assert_equal 1, results.total_rows
+    assert_equal doc._id, results.rows.first._id
+  end
+
+  def test_reduce_view_run
+    # make a couple docs to reduce
+    docs = [
+      { :letter => 'Ehh' },
+      { :letter => 'Bee' },
+      { :letter => 'See' },
+      { :letter => 'Bee' },
+      { :letter => 'Ehh' }
+    ]
+    total = 0
+    docs.map do |doc|
+      total += 1
+      Document.new( @db, doc ).save
+    end
+
+    assert_equal docs.length, @db.info.doc_count
+
+    # now create the view
+    view = { :map => "function( doc ) { emit( doc.letter, 1 ); }",
+             :reduce => "function( keys, values ) { return sum( values ); }" }
+    View.create( @db, 'something', 'total', view )
+
+    # run it
+    results = View.run( @db, 'something', 'total', { :reduce => true } )
+    assert_equal total, results.rows.first.value
+  end
+
+  def test_group_view_run
+    # make a couple docs to group
+    docs = [
+      { :letter => 'Ehh', :count => 4 },
+      { :letter => 'Bee', :count => 1 },
+      { :letter => 'See', :count => 2 },
+      { :letter => 'Bee', :count => 2 },
+      { :letter => 'Ehh', :count => 1 }
+    ]
+    totals = {}
+    docs.map do |doc|
+      totals[doc[:letter]] ||= 0
+      totals[doc[:letter]] += doc[:count]
+      Document.new( @db, doc ).save
+    end
+
+    assert_equal docs.length, @db.info.doc_count
+
+    # create the view
+    view = { :map => "function( doc ) { emit( doc.letter, doc.count ); }",
+             :reduce => "function( keys, values ) { return sum( values ); }" }
+    View.create( @db, 'something', 'grouped', view )
+
+    # run it
+    results = View.run( @db, 'something', 'grouped', { :group => true } )
+    results.rows.each do |doc|
+      assert_equal totals[doc.key], doc.value
+    end
   end
 end
