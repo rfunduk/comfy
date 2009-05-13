@@ -3,7 +3,7 @@ require 'redgreen'
 require 'test/unit/ui/console/testrunner'
 $:.unshift( File.dirname( File.expand_path( __FILE__ ) ) + '/lib/' )
 require 'comfy'
-require 'test/real_world'
+require 'test/integration'
 include Comfy
 
 def test( klass )
@@ -21,10 +21,10 @@ task :default do
     test klass
   end
 
-  # 'real world' tests
+  # integration tests
   1.upto( 10 ) do |i|
-    break unless RealWorld.respond_to?( :"real_world_#{i}" )
-    puts "-- RealWorld Test #{i} --"
-    RealWorld.send( :"real_world_#{i}" )
+    break unless IntegrationTests.respond_to?( :"test_#{i}" )
+    puts "-- Integration Test #{i} --"
+    IntegrationTests.send( :"test_#{i}" )
   end
 end

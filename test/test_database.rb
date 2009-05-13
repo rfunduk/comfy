@@ -8,8 +8,8 @@ class TestDatabase < Test::Unit::TestCase
 
   def setup
     Database.destroy!( 'idontexist' )
-    Database.destroy!( 'comfytest' )
-    @db = Database.new( 'comfytest' )
+    Database.destroy!( 'comfytest-unit' )
+    @db = Database.new( 'comfytest-unit' )
   end
 
   def test_no_such_db

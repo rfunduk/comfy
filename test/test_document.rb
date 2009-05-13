@@ -8,8 +8,8 @@ class TestDocument < Test::Unit::TestCase
   include Comfy
 
   def setup
-    Database.destroy!( 'comfytest' )
-    @db = Database.new( 'comfytest' )
+    Database.destroy!( 'comfytest-unit' )
+    @db = Database.new( 'comfytest-unit' )
     @fake_doc = { :a => 1, :b => 2, :c => 3 }
   end
 
