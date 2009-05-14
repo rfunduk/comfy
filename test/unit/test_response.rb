@@ -1,7 +1,4 @@
-require 'test/unit'
-require 'redgreen'
-$:.unshift( File.dirname( File.expand_path( __FILE__ ) ) + '/../../lib/' )
-require 'comfy'
+require 'test/test_helper'
 
 class TestResponse < Test::Unit::TestCase
   include Comfy

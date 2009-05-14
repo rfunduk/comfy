@@ -5,7 +5,7 @@ module Comfy
     
     attr_reader :db
     
-    def initialize( db, hash={} )
+    def initialize( hash={}, db=COMFY_DB )
       hash = JSON.parse( hash ) if hash.is_a? String
       @__hash = {}
       hash.entries.each do |key, value|
@@ -50,7 +50,7 @@ module Comfy
                            :content_type => 'application/json' )
       end
       
-      response = Response.new( result )
+      response = Response.new( result, @db )
       @__hash['_id'] = response._id
       @__hash['_rev'] = response.rev
       return response
@@ -65,9 +65,15 @@ module Comfy
         return false
       end
 
-      return Response.new( result )
+      return Response.new( result, @db )
     end
 
+    def self.get( uri, params={}, db=COMFY_DB )
+      uri += '?' + params.collect { |p| p.join( '=' ) }.join( '&' ) \
+        unless params.empty?
+      db.get( uri ).to_doc
+    end
+    
     protected
 
     def has?( key )

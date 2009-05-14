@@ -22,7 +22,7 @@ module Comfy
     
     def all
       get( '_all_docs', { :include_docs => true } ).to_doc.rows.collect do |row|
-        Document.new( self, row['doc'] )
+        Document.new( row['doc'], self )
       end
     end
 
@@ -36,6 +36,11 @@ module Comfy
 
     def self.destroy!( uri )
       Response.new( RCW.delete( Database.uri( uri ) ), self ) rescue nil
+    end
+
+    def self.reset!( uri )
+      self.destroy!( uri )
+      self.create( uri )
     end
 
     protected

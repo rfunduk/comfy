@@ -2,18 +2,17 @@ module Comfy
   class View
     include Comfy
 
-    def self.create( db, path, func={} )
+    def self.create( path, func={}, db=COMFY_DB )
       raise Comfy::InvalidView unless func.is_a?( Hash )
 
       @db = db
       design, view = path.split( '/' )
       existing = @db.get( '_design/' + design ).to_doc
       if existing.error
-        existing = Document.new( @db,
-          {
+        existing = Document.new( {
             '_id' => '_design/' + design,
             'views' => { view => {} }
-          }
+          }, db
         )
       end
 
@@ -24,7 +23,7 @@ module Comfy
       return existing
     end
 
-    def self.run( db, path, parameters={} )
+    def self.run( path, parameters={}, db=COMFY_DB )
       design, view = path.split( '/' )
       params = '?' + parameters.entries.collect do |key, value|
         "#{key}=#{value}"
@@ -36,7 +35,7 @@ module Comfy
 
       if response.rows
         docs = response.rows.collect do |row|
-          Document.new( db, row['doc'] || row )
+          Document.new( row['doc'] || row, db )
         end
         response.rows = docs
       end

@@ -3,7 +3,7 @@ module Comfy
   class Response
     include Comfy
 
-    def initialize( result, db=nil )
+    def initialize( result, db=COMFY_DB )
       @db = db
       @result = {}
       JSON.parse( result ).entries.each do |key, value|
@@ -39,7 +39,7 @@ module Comfy
     end
 
     def to_doc
-      Document.new( @db, @result )
+      Document.new( @result )
     end
 
   end
