@@ -1,6 +1,6 @@
 require 'test/unit'
 require 'redgreen'
-$:.unshift( File.dirname( File.expand_path( __FILE__ ) ) + '/../lib/' )
+$:.unshift( File.dirname( File.expand_path( __FILE__ ) ) + '/../../lib/' )
 require 'comfy'
 
 class TestResponse < Test::Unit::TestCase
