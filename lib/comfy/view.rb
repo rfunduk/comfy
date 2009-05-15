@@ -1,4 +1,5 @@
 module Comfy
+  # Comfy::View is a utility class
   class View
     include Comfy
 

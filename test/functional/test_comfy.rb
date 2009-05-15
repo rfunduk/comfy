@@ -41,9 +41,14 @@ class TestComfy < Test::Unit::TestCase
     saved_docs.each do |doc|
       # get the doc again
       fresh = Document.get( doc._id )
-      
       # make sure it's the same
       assert_equal doc.value, fresh.value
+    end
+
+    # now do a bulk_get and make sure all the docs are correct
+    all_docs = Document.bulk_get saved_docs.collect { |doc| doc._id }
+    all_docs.zip( saved_docs ).each do |fresh, original|
+      assert_equal original, fresh
     end
   end
 

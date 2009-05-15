@@ -86,6 +86,14 @@ module Comfy
       updated_docs
     end
 
+    def self.bulk_get( ids, db=COMFY_DB )
+      result = RCW.post( db.uri + '/_all_docs?include_docs=true',
+                         { :keys => ids }.to_json )
+      JSON.parse( result )['rows'].collect do |row|
+        Document.new( row['doc'], db )
+      end
+    end
+
     def self.get( uri, params={}, db=COMFY_DB )
       uri += '?' + params.collect { |p| p.join( '=' ) }.join( '&' ) \
         unless params.empty?

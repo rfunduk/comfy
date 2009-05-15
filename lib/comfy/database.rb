@@ -20,8 +20,8 @@ module Comfy
       get( '' ).to_doc
     end
     
-    def all
-      get( '_all_docs', { :include_docs => true } ).to_doc.rows.collect do |row|
+    def all( params={ :include_docs => true } )
+      get( '_all_docs', params ).to_doc.rows.collect do |row|
         Document.new( row['doc'], self )
       end
     end
