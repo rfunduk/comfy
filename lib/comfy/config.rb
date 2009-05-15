@@ -7,7 +7,7 @@ module Comfy
     end
 
     def self.db
-      @@db ||= Database.new( uri )
+      @@db ||= Database.new( DEFAULT_URI )
     end
   end
 end

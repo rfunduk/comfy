@@ -7,7 +7,9 @@ module Comfy
       @db = db
       @result = {}
       JSON.parse( result ).entries.each do |key, value|
-        key = '_' + key if Object.respond_to? key
+        case key.is_a?( String )
+        when true then key = '_' + key if Object.respond_to? key
+        end
         @result[key] = value
       end
       @result

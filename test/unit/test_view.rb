@@ -4,7 +4,7 @@ class TestView < Test::Unit::TestCase
   include Comfy
 
   def setup
-    Database.reset!( 'comfytest-unit' )
+    Database.reset!( 'comfytest' )
     @fake_doc = { :a => 1, :b => 2, :c => 3 }
     @fake_view = { :map => "function( doc ) { emit( doc._id, null ); }" }
   end

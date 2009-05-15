@@ -5,7 +5,7 @@ class TestDatabase < Test::Unit::TestCase
 
   def setup
     Database.destroy!( 'idontexist' )
-    Database.reset!( 'comfytest-unit' )
+    Database.reset!( 'comfytest' )
   end
 
   def test_no_such_db

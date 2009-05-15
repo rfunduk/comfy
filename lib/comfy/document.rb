@@ -20,7 +20,7 @@ module Comfy
       method = method.to_s
       if method =~ /=$/
         method.sub!(/=$/, '')
-        @__hash[method] = *args if has?( method )
+        @__hash[method] = *args
       else
         @__hash[method] if has?( method )
       end
@@ -28,6 +28,10 @@ module Comfy
 
     def to_json
       @__hash.to_json
+    end
+    
+    def hash
+      @__hash
     end
     
     def ==( other )
@@ -66,6 +70,20 @@ module Comfy
       end
 
       return Response.new( result, @db )
+    end
+    
+    def self.bulk_save( docs, db=COMFY_DB )
+      body = { 'docs' => docs.collect { |doc| doc.hash } }
+      result = RCW.post( db.uri + '/_bulk_docs', body.to_json,
+                         :content_type => 'application/json' )
+      zipped = JSON.parse( result ).zip( docs )
+      updated_docs = zipped.entries.collect do |result, original_doc|
+        Response.new( result.to_json ).ensure( :lacks => 'error' )
+        original_doc._rev = result['rev']
+        original_doc._id = result['id']
+        original_doc
+      end
+      updated_docs
     end
 
     def self.get( uri, params={}, db=COMFY_DB )

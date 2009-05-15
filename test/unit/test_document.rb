@@ -4,7 +4,7 @@ class TestDocument < Test::Unit::TestCase
   include Comfy
 
   def setup
-    Database.reset!( 'comfytest-unit' )
+    Database.reset!( 'comfytest' )
     @fake_doc = { :a => 1, :b => 2, :c => 3 }
   end
 

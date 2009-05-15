@@ -5,20 +5,28 @@ $:.unshift( File.dirname( File.expand_path( __FILE__ ) ) + '/lib/' )
 require 'comfy'
 include Comfy
 
-TESTS = [ 
-  [ 'unit', [ Database, Document, View, Response ] ],
-  [ 'functional', [ Comfy ] ]
-]
+TESTS = { 
+  :unit  => [ Database, Document, View, Response ],
+  :functional => [ Comfy ]
+}
 
-task :default do
-  TESTS.entries.each do |type, classes|
-    classes.each do |klass|
-      puts "Testing - #{klass}..."
-      base_klass = klass.name.split( '::' ).last
-      require "test/#{type.to_s}/test_#{base_klass.downcase}.rb"
-      Test::Unit::UI::Console::TestRunner.run(
-        Kernel.const_get( 'Test' + base_klass )
-      )
-    end
+def test( klass, test_type )
+  puts "Testing - #{klass}..."
+  base_klass = klass.name.split( '::' ).last
+  require "test/#{test_type}/test_#{base_klass.downcase}.rb"
+  Test::Unit::UI::Console::TestRunner.run(
+    Kernel.const_get( 'Test' + base_klass )
+  )
+end
+
+namespace :test do
+  task :unit do
+    #COMFY_DB = Comfy::Config.set_database( 'comfytest-unit' )
+    TESTS[:unit].each { |klass| test klass, 'unit' }
+  end
+  
+  task :functional do
+    #COMFY_DB = Comfy::Config.set_database( 'comfytest-func' )
+    TESTS[:functional].each { |klass| test klass, 'functional' }
   end
 end
