@@ -26,7 +26,7 @@ class TestComfy < Test::Unit::TestCase
     assert_equal 1, COMFY_DB.all.size
     
     # make 5 docs
-    docs = 1.upto(5).collect { |i| Document.new( { :value => i } ) }
+    docs = (1..5).collect { |i| Document.new( { :value => i } ) }
     assert_equal 5, docs.size
     
     # bulk save them
