@@ -21,12 +21,12 @@ end
 
 namespace :test do
   task :unit do
-    #COMFY_DB = Comfy::Config.set_database( 'comfytest-unit' )
+    #template_id = Comfy::Config.set_database( 'comfytest-unit' )
     TESTS[:unit].each { |klass| test klass, 'unit' }
   end
   
   task :functional do
-    #COMFY_DB = Comfy::Config.set_database( 'comfytest-func' )
+    #template_id = Comfy::Config.set_database( 'comfytest-func' )
     TESTS[:functional].each { |klass| test klass, 'functional' }
   end
 end

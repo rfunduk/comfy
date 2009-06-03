@@ -3,7 +3,7 @@ module Comfy
   class View
     include Comfy
 
-    def self.create( path, func={}, db=COMFY_DB )
+    def self.create( path, func={}, db=Comfy::Config.db )
       raise Comfy::InvalidView unless func.is_a?( Hash )
 
       @db = db
@@ -24,7 +24,7 @@ module Comfy
       return existing
     end
 
-    def self.run( path, parameters={}, db=COMFY_DB )
+    def self.run( path, parameters={}, db=Comfy::Config.db )
       design, view = path.split( '/' )
       params = '?' + parameters.entries.collect do |key, value|
         "#{key}=#{value}"

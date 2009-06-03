@@ -9,11 +9,11 @@ class TestDocument < Test::Unit::TestCase
   end
 
   def test_reading_properties
-    assert_equal 0, COMFY_DB.info.doc_count
+    assert_equal 0, Comfy::Config.db.info.doc_count
   end
 
   def test_writing_properties
-    info = COMFY_DB.info
+    info = Comfy::Config.db.info
     assert_equal 0, info.doc_count
     info.doc_count = 1
     assert_equal 1, info.doc_count
@@ -27,8 +27,8 @@ class TestDocument < Test::Unit::TestCase
   
   def test_doc_create
     Document.new( @fake_doc ).save
-    assert_equal 1, COMFY_DB.all.length
-    assert_equal 1, COMFY_DB.info.doc_count
+    assert_equal 1, Comfy::Config.db.all.length
+    assert_equal 1, Comfy::Config.db.info.doc_count
   end
 
   def test_doc_update
@@ -56,18 +56,18 @@ class TestDocument < Test::Unit::TestCase
     retrieved_doc = Document.get( doc._id )
     
     assert_equal retrieved_doc._id, doc._id
-    assert COMFY_DB.all.include?( retrieved_doc )
-    assert_equal 1, COMFY_DB.all.length
-    assert_equal 1, COMFY_DB.info.doc_count
+    assert Comfy::Config.db.all.include?( retrieved_doc )
+    assert_equal 1, Comfy::Config.db.all.length
+    assert_equal 1, Comfy::Config.db.info.doc_count
   end
 
   def test_doc_delete
     doc = Document.new( @fake_doc )
     doc.save
 
-    assert_equal 1, COMFY_DB.info.doc_count
+    assert_equal 1, Comfy::Config.db.info.doc_count
     assert doc.delete.is_a?( Response )
-    assert_equal 0, COMFY_DB.info.doc_count
+    assert_equal 0, Comfy::Config.db.info.doc_count
   end
 
 end

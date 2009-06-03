@@ -5,4 +5,4 @@ require 'comfy'
 
 # if you aren't using autotest, comment this and uncomment
 # the similar lines in Rakefile
-COMFY_DB = Comfy::Config.set_database( 'comfytest' )
+template_id = Comfy::Config.set_database( 'comfytest' )

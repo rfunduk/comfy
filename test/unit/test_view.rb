@@ -69,7 +69,7 @@ class TestView < Test::Unit::TestCase
       Document.new( doc ).save
     end
 
-    assert_equal docs.length, COMFY_DB.info.doc_count
+    assert_equal docs.length, Comfy::Config.db.info.doc_count
 
     # now create the view
     view = { :map => "function( doc ) { emit( doc.letter, 1 ); }",
@@ -97,7 +97,7 @@ class TestView < Test::Unit::TestCase
       Document.new( doc ).save
     end
 
-    assert_equal docs.length, COMFY_DB.info.doc_count
+    assert_equal docs.length, Comfy::Config.db.info.doc_count
 
     # create the view
     view = { :map => "function( doc ) { emit( doc.letter, doc.count ); }",

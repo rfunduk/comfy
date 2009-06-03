@@ -14,14 +14,14 @@ class TestDatabase < Test::Unit::TestCase
 
   def test_db_info
     assert_nothing_raised do
-      info = COMFY_DB.info
+      info = Comfy::Config.db.info
       doc_count = info.doc_count
       disk_size = info.disk_size
     end
   end
   
   def test_all_docs
-    assert_equal 0, COMFY_DB.all.length
+    assert_equal 0, Comfy::Config.db.all.length
   end
 
 end

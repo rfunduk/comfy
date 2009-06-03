@@ -3,7 +3,7 @@ module Comfy
   class Response
     include Comfy
 
-    def initialize( result, db=COMFY_DB )
+    def initialize( result, db=Comfy::Config.db )
       @db = db
       @result = {}
       JSON.parse( result ).entries.each do |key, value|

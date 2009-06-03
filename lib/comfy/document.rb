@@ -5,7 +5,7 @@ module Comfy
     
     attr_reader :db
     
-    def initialize( hash={}, db=COMFY_DB )
+    def initialize( hash={}, db=Comfy::Config.db )
       hash = JSON.parse( hash ) if hash.is_a? String
       @__hash = {}
       hash.entries.each do |key, value|
@@ -72,7 +72,7 @@ module Comfy
       return Response.new( result, @db )
     end
     
-    def self.bulk_save( docs, db=COMFY_DB )
+    def self.bulk_save( docs, db=Comfy::Config.db )
       body = { 'docs' => docs.collect { |doc| doc.hash } }
       result = RCW.post( db.uri + '/_bulk_docs', body.to_json,
                          :content_type => 'application/json' )
@@ -86,7 +86,7 @@ module Comfy
       updated_docs
     end
 
-    def self.bulk_get( ids, db=COMFY_DB )
+    def self.bulk_get( ids, db=Comfy::Config.db )
       result = RCW.post( db.uri + '/_all_docs?include_docs=true',
                          { :keys => ids }.to_json )
       JSON.parse( result )['rows'].collect do |row|
@@ -94,7 +94,7 @@ module Comfy
       end
     end
 
-    def self.get( uri, params={}, db=COMFY_DB )
+    def self.get( uri, params={}, db=Comfy::Config.db )
       uri += '?' + params.collect { |p| p.join( '=' ) }.join( '&' ) \
         unless params.empty?
       db.get( uri ).to_doc
