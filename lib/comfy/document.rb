@@ -80,8 +80,7 @@ module Comfy
 
     def self.bulk_save( docs, db=Comfy::Config.db )
       docs = docs.collect { |doc| doc.is_a?(Document) ? doc.hash : doc }
-      body = { 'docs' => docs }
-      result = RCW.post( db.uri + '/_bulk_docs', body.to_json,
+      result = RCW.post( db.uri + '/_bulk_docs', { 'docs' => docs }.to_json,
                          :content_type => 'application/json' )
       zipped = JSON.parse( result ).zip( docs )
       
