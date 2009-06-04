@@ -25,6 +25,7 @@ module Comfy
     def add_field( attribute, value )
       @__hash[attribute] = value
     end
+    alias :update_field :add_field
 
     def remove_field( attribute )
       @__hash.delete attribute rescue nil

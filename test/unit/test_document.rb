@@ -76,6 +76,12 @@ class TestDocument < Test::Unit::TestCase
     assert_equal 1, doc.omg
   end
 
+  def test_doc_update_field
+    doc = Document.new( @fake_doc )
+    doc.update_field 'omg', 1
+    assert_equal 1, doc.omg
+  end
+
   def test_doc_remove_field
     doc = Document.new( @fake_doc )
     doc.add_field 'omg', 1
