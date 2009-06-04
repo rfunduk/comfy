@@ -22,8 +22,8 @@ module Comfy
       doc
     end
 
-    def <<( array )
-      @__hash[array.first] = array.last
+    def field( attribute, value )
+      @__hash[attribute] = value
     end
 
     def method_missing( method, *args, &block )
