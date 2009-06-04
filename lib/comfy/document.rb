@@ -27,6 +27,11 @@ module Comfy
     end
     alias :update_field :add_field
 
+    def add_fields( hash )
+      @__hash.merge! hash
+    end
+    alias :update_fields :add_fields
+
     def remove_field( attribute )
       @__hash.delete attribute rescue nil
     end
@@ -94,9 +99,9 @@ module Comfy
       zipped = JSON.parse( result ).zip( docs )
       
       updated_docs = zipped.entries.collect do |result, original_doc|
-        original_doc = Document.new( original_doc ) \
+        original_doc = Document.new( original_doc, db ) \
           unless original_doc.is_a? Document
-        Response.new( result.to_json ).ensure( :lacks => 'error' )
+        Response.new( result.to_json, nil ).ensure( :lacks => 'error' )
         original_doc._rev = result['rev']
         original_doc._id = result['id']
         original_doc
