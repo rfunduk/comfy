@@ -22,8 +22,12 @@ module Comfy
       doc
     end
 
-    def field( attribute, value )
+    def add_field( attribute, value )
       @__hash[attribute] = value
+    end
+
+    def remove_field( attribute )
+      @__hash.delete attribute rescue nil
     end
 
     def method_missing( method, *args, &block )

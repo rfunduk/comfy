@@ -24,7 +24,7 @@ class TestDocument < Test::Unit::TestCase
     assert_equal JSON.parse( @fake_doc.to_json ),
                  JSON.parse( Document.new( @fake_doc ).to_json )
   end
-  
+
   def test_doc_create
     Document.new( @fake_doc ).save
     assert_equal 1, Comfy::Config.db.all.length
@@ -37,19 +37,19 @@ class TestDocument < Test::Unit::TestCase
     doc.save
     assert doc._id
     rev = doc._rev
-
+    
     doc.a = 5
     doc.b += 1
     doc.save
-
+    
     assert_equal 5, doc.a
     assert_not_equal doc.b, @fake_doc[:b]
-
+    
     raw_doc = Document.get( doc._id )
     assert_equal doc, raw_doc
     assert_not_equal rev, raw_doc._rev 
   end
-  
+
   def test_doc_get
     doc = Document.new( @fake_doc )
     doc.save
@@ -64,10 +64,25 @@ class TestDocument < Test::Unit::TestCase
   def test_doc_delete
     doc = Document.new( @fake_doc )
     doc.save
-
+    
     assert_equal 1, Comfy::Config.db.info.doc_count
     assert doc.delete.is_a?( Response )
     assert_equal 0, Comfy::Config.db.info.doc_count
+  end
+
+  def test_doc_add_field
+    doc = Document.new( @fake_doc )
+    doc.add_field 'omg', 1
+    assert_equal 1, doc.omg
+  end
+
+  def test_doc_remove_field
+    doc = Document.new( @fake_doc )
+    doc.add_field 'omg', 1
+    assert_equal 1, doc.omg
+    
+    doc.remove_field 'omg'
+    assert_nil doc.omg
   end
 
 end
