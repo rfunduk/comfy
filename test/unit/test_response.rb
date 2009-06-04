@@ -33,6 +33,13 @@ class TestResponse < Test::Unit::TestCase
       assert_equal value, @response.send( key )
     end
   end
+  
+  def test_to_doc_has_same_db
+    db = Database.new( 'comfytest2' )
+    new_doc = Document.new( @doc, db )
+    response = new_doc.save.to_doc
+    assert_equal db, response.db
+  end
 
   def test_name_mangling
     @doc['id'] = 'laksjdf'
