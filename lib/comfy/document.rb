@@ -22,6 +22,10 @@ module Comfy
       doc
     end
 
+    def <<( array )
+      @__hash[array.first] = array.last
+    end
+
     def method_missing( method, *args, &block )
       method = method.to_s
       if method =~ /=$/
@@ -35,11 +39,11 @@ module Comfy
     def to_json
       @__hash.to_json
     end
-    
+
     def hash
       @__hash
     end
-    
+
     def ==( other )
       return false unless @db == other.db
       @__hash.entries.each do |key, value|

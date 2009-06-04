@@ -41,7 +41,7 @@ module Comfy
     end
 
     def to_doc
-      Document.new( @result )
+      Document.new( @result, @db )
     end
 
   end
