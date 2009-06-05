@@ -123,8 +123,6 @@ module Comfy
       db.get( uri ).to_doc
     end
 
-    protected
-
     def has?( key )
       key = key.to_s if key.is_a? Symbol
       return @__hash.has_key?( key )
